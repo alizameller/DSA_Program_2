@@ -525,12 +525,12 @@ void sortDataList(list<Data *> &l) {
         }
     } else if (l.front()->firstName > (*l.begin()++)->firstName && l.front()->lastName > (*l.begin()++)->lastName)
         for (auto i: l) {
-            personsList.push_back(new Person{firsts[i->lastName], lasts[i->firstName],ssntoi(i->ssn), i});
+            personsList.push_back(new Person{0,0,ssntoi(i->ssn), i});
         }
-    personsList.sort(comparingPersonSsn);
-    l.clear();
+        personsList.sort(comparingPersonSsn);
+        l.clear();
 
-    for (auto i: personsList) {
+        for (auto i: personsList) {
         l.push_back(i->P);
     }
 }
