@@ -112,7 +112,7 @@ int main() {
 // class definitions here if you wish.
 #include <unordered_map>
 
-unordered_map<string, int> lastNames = {
+unordered_map<string, int> lasts = {
         {"ACOSTA", 0},       {"ADAMS", 1},        {"ADKINS", 2},
         {"AGUILAR", 3},      {"AGUIRRE", 4},      {"ALEXANDER", 5},
         {"ALLEN", 6},        {"ALVARADO", 7},     {"ALVAREZ", 8},
@@ -283,7 +283,7 @@ unordered_map<string, int> lastNames = {
 
 };
 
-unordered_map<string, int> firstNames = {
+unordered_map<string, int> firsts = {
         {"AALIYAH", 0},     {"AARON", 1},       {"ABEL", 2},
         {"ABIGAIL", 3},     {"ABRAHAM", 4},     {"ADALINE", 5},
         {"ADALYN", 6},      {"ADALYNN", 7},     {"ADAM", 8},
@@ -459,30 +459,35 @@ public:
     Data* P;
 };
 
+int ssntoi(string ssn) //converts ssn to int and takes out '-'
+{
+    ssn.erase(remove(ssn.begin(),ssn.end(),'-'),ssn.end());
+    int number=stoi(ssn);
+    return number;
+}
+
 list<Person *> personsList; //list used to compare persons
 
 
 bool comparingPersons (Person *a, Person *b) {//compares last, first, and ssn
 
-    if (b->personLastName!=a->personLastName) //why can't I use .compare
-    {
+    if (b->personLastName!=a->personLastName) {//why can't I use .compare
         return b->personLastName>a->personLastName;
     }
-    else if (b->personFirstName!=a->personFirstName)
-    {
+    else if (b->personFirstName!=a->personFirstName) {
         return b->personFirstName>a->personFirstName;
     }
-    else if (b->personSsn!=a->personSsn)
-    {
+    else if (b->personSsn!=a->personSsn){
         return b->personSsn > a->personSsn;
     }
+    return false;
 }
 
 bool comparingPersonSsn (Person *a, Person *b) {
-    if (b->personSsn!=a->personSsn)
-    {
+    if (b->personSsn!=a->personSsn) {
         return b->personSsn > a->personSsn;
     }
+    return false;
 }
 
 bool dataCompare(Data* a, Data* b) {
@@ -498,5 +503,34 @@ bool dataCompare(Data* a, Data* b) {
 
 
 void sortDataList(list<Data *> &l) {
-    personsList.sort(comparingPersons);
+    if (l.size() < 100000) { //T1
+        for (auto i: l) {
+            personsList.push_back(new Person{firsts[i->lastName], lasts[i->firstName], ssntoi(i->ssn), i});
+        }
+        personsList.sort(comparingPersons);
+        l.clear();
+
+        for (auto i: personsList) {
+            l.push_back(i->P);
+        }
+    } else if (l.front()->firstName == l.back()->firstName && l.front()->lastName == l.back()->lastName) { //T4
+        for (auto i: l) { //should I check more than just first and last
+            personsList.push_back(new Person{0, 0, ssntoi(i->ssn), i});
+        }
+        personsList.sort(comparingPersonSsn);
+        l.clear();
+
+        for (auto i: personsList) {
+            l.push_back(i->P);
+        }
+    } else if (l.front()->firstName > (*l.begin()++)->firstName && l.front()->lastName > (*l.begin()++)->lastName)
+        for (auto i: l) {
+            personsList.push_back(new Person{firsts[i->lastName], lasts[i->firstName],ssntoi(i->ssn), i});
+        }
+    personsList.sort(comparingPersonSsn);
+    l.clear();
+
+    for (auto i: personsList) {
+        l.push_back(i->P);
+    }
 }
