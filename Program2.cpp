@@ -468,8 +468,7 @@ int ssntoi(string ssn) //converts ssn to int and takes out '-'
 
 list<Person *> personsList; //list used to compare persons
 
-
-bool comparingPersons (Person *a, Person *b) {//compares last, first, and ssn
+bool comparingPersons(Person *a, Person *b) {//compares last, first, and ssn
 
     if (b->personLastName!=a->personLastName) {//why can't I use .compare
         return b->personLastName>a->personLastName;
@@ -477,17 +476,15 @@ bool comparingPersons (Person *a, Person *b) {//compares last, first, and ssn
     else if (b->personFirstName!=a->personFirstName) {
         return b->personFirstName>a->personFirstName;
     }
-    else if (b->personSsn!=a->personSsn){
+    else if (b->personSsn!=a->personSsn) {
         return b->personSsn > a->personSsn;
     }
-    return false;
 }
 
 bool comparingPersonSsn (Person *a, Person *b) {
     if (b->personSsn!=a->personSsn) {
         return b->personSsn > a->personSsn;
     }
-    return false;
 }
 
 bool dataCompare(Data* a, Data* b) {
@@ -501,11 +498,10 @@ bool dataCompare(Data* a, Data* b) {
     return result < 0; //returns TRUE when a should be above b
 }
 
-
 void sortDataList(list<Data *> &l) {
-    if (l.size() < 100000) { //T1
+   // if (l.size() < 1000000) { //T1
         for (auto i: l) {
-            personsList.push_back(new Person{firsts[i->lastName], lasts[i->firstName], ssntoi(i->ssn), i});
+            personsList.push_back(new Person{firsts[i->lastName], lasts[i->firstName], 0);
         }
         personsList.sort(comparingPersons);
         l.clear();
@@ -513,7 +509,7 @@ void sortDataList(list<Data *> &l) {
         for (auto i: personsList) {
             l.push_back(i->P);
         }
-    } else if (l.front()->firstName == l.back()->firstName && l.front()->lastName == l.back()->lastName) { //T4
+    } /*else if (l.front()->firstName == l.back()->firstName && l.front()->lastName == l.back()->lastName) { //T4
         for (auto i: l) { //should I check more than just first and last
             personsList.push_back(new Person{0, 0, ssntoi(i->ssn), i});
         }
@@ -523,14 +519,18 @@ void sortDataList(list<Data *> &l) {
         for (auto i: personsList) {
             l.push_back(i->P);
         }
-    } else if (l.front()->firstName > (*l.begin()++)->firstName && l.front()->lastName > (*l.begin()++)->lastName)
+    } else if (l.front()->firstName > (*l.begin()++)->firstName && l.front()->lastName > (*l.begin()++)->lastName) { //T3
         for (auto i: l) {
-            personsList.push_back(new Person{0,0,ssntoi(i->ssn), i});
+            personsList.push_back(new Person{0, 0, ssntoi(i->ssn), i});
         }
         personsList.sort(comparingPersonSsn);
         l.clear();
 
         for (auto i: personsList) {
-        l.push_back(i->P);
-    }
+            l.push_back(i->P);
+        }
+    } else {
+        l.sort(dataCompare);
+        cout << "last case" << endl;
+    }*/
 }
