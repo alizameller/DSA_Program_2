@@ -111,12 +111,6 @@ int main() {
 // You may add global variables, functions, and/or
 // class definitions here if you wish.
 
-int ssntoi(string ssn) {//converts ssn to int and takes out '-'
-    ssn.erase(remove(ssn.begin(),ssn.end(),'-'),ssn.end());
-    int number=stoi(ssn);
-    return number;
-}
-
 bool dataCompare(Data* a, Data* b) {
     int result = a->lastName.compare(b->lastName);
     if (result == 0) {
@@ -128,13 +122,64 @@ bool dataCompare(Data* a, Data* b) {
     return result < 0; //returns TRUE when a should be above b
 }
 
+bool t3DataCompare(Data* a, Data* b) {
+    if (a->firstName == b->firstName && a->lastName == b->lastName) {
+        return a->ssn.compare(b->ssn) < 0;
+    }
+    return 0;
+}
+
+bool nameCompare(Data* a, Data* b) {
+    int result = a->lastName.compare(b->lastName);
+    if (result == 0) {
+        result = a->firstName.compare(b->firstName);
+    }
+    return result <= 0;
+}
+
+bool ssnCompare(Data* a, Data* b) {
+    if (a->ssn >= b->ssn) {
+        return false;
+    } else {
+        return true;
+    }
+}
+
+int ssntoi(string ssn) {//converts ssn to int and takes out '-'
+    ssn.erase(remove(ssn.begin(),ssn.end(),'-'),ssn.end());
+    int number=stoi(ssn);
+    return number;
+}
+
 void sortDataList(list<Data *> &l) {
-    if (l.size() < 1000000) { //T1
+    if (l.size() < 500000) { //T1
+        l.sort(dataCompare);
+        return;
+    }
 
-    } else if (l.front()->firstName == l.back()->firstName && l.front()->lastName == l.back()->lastName) { //T4
+    int t3 = 1;
+    int t4 = 1;
+    auto it = l.begin();
 
-    } else if (l.front()->firstName > (*l.begin()++)->firstName && l.front()->lastName > (*l.begin()++)->lastName) { //T3
+    for (int i = 1; i < 5; i++){
+        if(!nameCompare(*it,*(++it))) {
+            t3 = 0;
+        }
+        if (l.front()->firstName != (*it)->firstName || l.front()->lastName != (*it)->lastName){
+            t4 = 0;
+        }
+    }
 
+    if (l.front()->firstName != l.back()->firstName || l.front()->lastName != l.back()->lastName) {
+        t4 = 0;
+    } else {
+        t3 = 0;
+    }
+
+    if (t3) { //T3
+        l.sort(t3DataCompare);
+    } else if (t4) { //T4
+        l.sort(ssnCompare);
     } else {
         l.sort(dataCompare);
     }
