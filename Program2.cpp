@@ -152,13 +152,6 @@ bool ssnCompare(Data* a, Data* b) {
     }
 }
 
-/*
-int ssntoi(string ssn) {//converts ssn to int and takes out '-'
-    ssn.erase(remove(ssn.begin(),ssn.end(),'-'),ssn.end());
-    int number=stoi(ssn);
-    return number;
-}*/
-
 void sortDataList(list<Data *> &l) {
 
     for (auto const &i: l) {
@@ -175,13 +168,14 @@ void sortDataList(list<Data *> &l) {
 
     for (int i = 0; i < 500; i++) {
         auto lastNameVector = lastNameMap[lastNames[i]];
-        for (auto &j: lastNameVector) {
-            if (j != lastNameVector.back() && !(j->firstName.compare((j + 1)->firstName))) {
+        int k = lastNameVector.size() - 1;
+        for (int j = 0; j <= k; ++j) {
+            if (j != k && !(lastNameVector[j]->firstName.compare((lastNameVector[j + 1])->firstName))) {
                 vector<Data *> tempBuffer;
-                tempBuffer.push_back(j);
-                auto start = j->firstName;
-                while (j != lastNameVector.back() && start == (j + 1)->firstName) {
-                    tempBuffer.push_back(j + 1);
+                tempBuffer.push_back(lastNameVector[j]);
+                auto start = lastNameVector[j]->firstName;
+                while (lastNameVector[j] != lastNameVector.back() && start == lastNameVector[j+1]->firstName) {
+                    tempBuffer.push_back(lastNameVector[j+1]);
                     j++;
                 }
                 sort(tempBuffer.begin(), tempBuffer.end(), ssnCompare);
@@ -190,7 +184,7 @@ void sortDataList(list<Data *> &l) {
                     listPointer++;
                 }
             } else {
-                *listPointer = j;
+                *listPointer = lastNameVector[j];
                 listPointer++;
             }
         }
