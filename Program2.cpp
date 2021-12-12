@@ -135,7 +135,8 @@ bool t3DataCompare(Data* a, Data* b) {
     }
     return 0;
 }
-
+*/
+/*
 bool nameCompare(Data* a, Data* b) {
     int result = a->lastName.compare(b->lastName);
     if (result == 0) {
@@ -169,18 +170,18 @@ void sortDataList(list<Data *> &l) {
     for (int i = 0; i < 500; i++) {
         auto lastNameVector = lastNameMap[lastNames[i]];
         int k = lastNameVector.size() - 1;
-        for (int j = 0; j <= k; ++j) {
+        for (int j = 0; j <= k; j++) {
             if (j != k && !(lastNameVector[j]->firstName.compare((lastNameVector[j + 1])->firstName))) {
-                vector<Data *> tempBuffer;
-                tempBuffer.push_back(lastNameVector[j]);
-                auto start = lastNameVector[j]->firstName;
-                while (lastNameVector[j] != lastNameVector.back() && start == lastNameVector[j+1]->firstName) {
-                    tempBuffer.push_back(lastNameVector[j+1]);
+                Data* tempBuffer[1000];
+                int index = 0;
+                tempBuffer[index++] = lastNameVector[j];
+                while (j < k && lastNameVector[j]->firstName == lastNameVector[j+1]->firstName) {
+                    tempBuffer[index++] = lastNameVector[j+1];
                     j++;
                 }
-                sort(tempBuffer.begin(), tempBuffer.end(), ssnCompare);
-                for (auto const &k: tempBuffer) {
-                    *listPointer = k;
+                sort(tempBuffer, &tempBuffer[index], ssnCompare);
+                for (int k = 0; k < index; k++) {
+                    *listPointer = tempBuffer[k];
                     listPointer++;
                 }
             } else {
